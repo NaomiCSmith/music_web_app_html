@@ -66,6 +66,18 @@ def get_albums():
     albums = repository.all()
     return render_template('albums.html', albums=albums)
 
+# requests:
+# /GET one specific album with html
+
+@app.route('/getalbum/<int:album_id>', methods=['GET'])
+def get_single_album(album_id):
+    connection = get_flask_database_connection(app)
+    repository = AlbumRepository(connection)
+    album = repository.find(album_id)
+    return render_template('find_single_album.html', album=album)
+
+
+
 
 
 
