@@ -54,3 +54,16 @@ def test_get_albums(db_connection, page, test_web_address):
         "Title: Surfer Rosa\nReleased: 1988",
         "Title: Waterloo\nReleased: 1974",
     ])
+
+"""
+GET /singlealbum
+When: I submit a get request for a specific album in html
+Then: I receive the details of that album
+"""
+def test_get_single_album(db_connection, page, test_web_address):
+    db_connection.seed("seeds/music_web_app.sql")
+    page.goto(f"http://{test_web_address}/getalbum/3")
+    h1_tag = page.locator("h1")
+    expect(h1_tag).to_have_text("Waterloo")
+    p_tag = page.locator("p")
+    expect(p_tag).to_have_text("Release year: 1974")
