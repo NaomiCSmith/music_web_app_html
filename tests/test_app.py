@@ -39,3 +39,18 @@ def test_post_artist_and_return_all_artists(web_client):
     second_response = web_client.get("/artists")
     assert second_response.status_code == 200
     assert second_response.data.decode("utf-8") == 'Pixies, ABBA, Taylor Swift, Nina Simone, Wild nothing'
+
+"""
+GET /albums
+When: I submit a get request to albums in html
+Then: I receive a list of all albums in the repository
+"""
+def test_get_albums(db_connection, page, test_web_address):
+    db_connection.seed("seeds/music_web_app.sql")
+    page.goto(f"http://{test_web_address}/getalbums")
+    div_tags = page.locator("div")
+    expect(div_tags).to_have_text([
+        "Title: Doolittle\nReleased: 1989",
+        "Title: Surfer Rosa\nReleased: 1988",
+        "Title: Waterloo\nReleased: 1974",
+    ])
