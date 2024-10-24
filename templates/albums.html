@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Albums</title>
+    </head>
+    
+    <body>
+    {% for album in albums %}
+        <div>
+        Title: {{album.title}}<br>
+        Released: {{album.release_year}}
+        </div>
+    
+    {% endfor %}
+    </body>
+
+
+
+
+
+</html>
