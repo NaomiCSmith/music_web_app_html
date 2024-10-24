@@ -4,7 +4,7 @@ from lib.album_repository import *
 from lib.album import *
 from lib.artist_repository import *
 from lib.artist import *
-from flask import Flask, request
+from flask import Flask, request, render_template
 
 # Create a new Flask app
 app = Flask(__name__)
@@ -53,6 +53,24 @@ def post_artist_and_return_all_artists():
     artist = Artist(None, request.form['name'], request.form['genre'])
     artist_repository.create(artist)
     return (", ".join(artist.name for artist in artist_repository.all()))
+
+
+
+# Request:
+# /GET albums with html
+
+@app.route('/getalbums', methods=['GET'])
+def get_albums():
+    connection = get_flask_database_connection(app)
+    repository = AlbumRepository(connection)
+    albums = repository.all()
+    return render_template('albums.html', albums=albums)
+
+
+
+
+
+
 
 
 
