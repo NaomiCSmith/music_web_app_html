@@ -4,17 +4,38 @@ from playwright.sync_api import Page, expect
 
 # === Example Code Below ===
 
+# Tests for your routes go here
+
 """
-We can get an emoji from the /emoji page
+POST /albums
+When: I add an album to albums
+Then: The new album is added and nothing is returned
 """
-def test_get_emoji(page, test_web_address): # Note new parameters
-    # We load a virtual browser and navigate to the /emoji page
-    page.goto(f"http://{test_web_address}/emoji")
+def test_post_albums(db_connection, web_client):
+    db_connection.seed("seeds/music_web_app.sql")
+    post_response = web_client.post("/albums", data={'title': 'Voyage', 'release_year': '2022', 'artist_id': '2'})
+    assert post_response.status_code == 200
+    assert post_response.data.decode('utf-8') == ""
 
-    # We look at the <strong> tag
-    strong_tag = page.locator("strong")
+"""
+GET /artists
+When: I submit a get request to artists
+Then: I receive a list of all artists' names in the repository
+"""
+def test_get_all_artists(db_connection, web_client):
+    db_connection.seed("seeds/music_web_app.sql")
+    response = web_client.get("/artists")
+    assert response.status_code == 200
+    assert response.data.decode("utf-8") == 'Pixies, ABBA, Taylor Swift, Nina Simone'
 
-    # We assert that it has the text ":)"
-    expect(strong_tag).to_have_text(":)")
-
-# === End Example Code ===
+"""
+POST /artists
+When: I add an artist to artists
+Then: I receive a list of artists' names with my new artist added on the end
+"""
+def test_post_artist_and_return_all_artists(web_client):
+    response = web_client.post("/artists", data={'name': 'Wild nothing', 'genre': 'Indie'})
+    assert response.status_code == 200
+    second_response = web_client.get("/artists")
+    assert second_response.status_code == 200
+    assert second_response.data.decode("utf-8") == 'Pixies, ABBA, Taylor Swift, Nina Simone, Wild nothing'
