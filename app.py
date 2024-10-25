@@ -64,7 +64,7 @@ def get_albums():
     connection = get_flask_database_connection(app)
     repository = AlbumRepository(connection)
     albums = repository.all()
-    return render_template('albums.html', albums=albums)
+    return render_template('/albums.html', albums=albums)
 
 # requests:
 # /GET one specific album with html
@@ -74,15 +74,16 @@ def get_single_album(album_id):
     connection = get_flask_database_connection(app)
     repository = AlbumRepository(connection)
     album = repository.find(album_id)
-    return render_template('find_single_album.html', album=album)
+    return render_template('/find_single_album.html', album=album)
 
 
-
-
-
-
-
-
+# add anchors to albums page
+@app.route('/getalbums/<int:album_id>', methods=['GET'])
+def show_album(album_id):
+    connection = get_flask_database_connection(app)
+    repository = AlbumRepository(connection)
+    album = repository.find(album_id)
+    return render_template('/show.html', album=album)
 
 
 

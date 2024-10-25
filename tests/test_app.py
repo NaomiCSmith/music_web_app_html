@@ -67,3 +67,16 @@ def test_get_single_album(db_connection, page, test_web_address):
     expect(h1_tag).to_have_text("Waterloo")
     p_tag = page.locator("p")
     expect(p_tag).to_have_text("Release year: 1974")
+
+
+"""
+When: I visit the albums page
+Then: I can click on a link to see more details about the album
+"""
+
+def test_show_album(db_connection, page, test_web_address):
+    db_connection.seed("seeds/music_web_app.sql")
+    page.goto(f"http://{test_web_address}/getalbums")
+    page.click("text=Title: Waterloo")
+    h1_tag = page.locator("h1")
+    expect(h1_tag).to_have_text("Album: Waterloo")
