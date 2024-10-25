@@ -4,7 +4,7 @@ from lib.album_repository import *
 from lib.album import *
 from lib.artist_repository import *
 from lib.artist import *
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 
 # Create a new Flask app
 app = Flask(__name__)
@@ -104,6 +104,26 @@ def show_artist(artist_id):
     repository = ArtistRepository(connection)
     artist = repository.find(artist_id)
     return render_template('/show_artists.html', artist=artist)
+
+
+# Request:
+# /GET albums and /POST album
+
+@app.route('/getalbums/new')
+def submit_album():
+    return render_template('/new_album.html')
+
+@app.route('/getalbums', methods=['POST'])
+def create_new_album():
+    connection = get_flask_database_connection(app)
+    repository = AlbumRepository(connection)
+    title = request.form['title']
+    release_year = int(request.form['release_year'])
+    album = Album(None, title, release_year, 1)
+    repository.create(album)
+    return redirect(f"/getalbums")
+
+
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database

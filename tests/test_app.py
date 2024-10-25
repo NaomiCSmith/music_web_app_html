@@ -110,3 +110,24 @@ def test_show_artist(db_connection, page, test_web_address):
     page.click("text=Name: Taylor Swift")
     h1_tag = page.locator("h1")
     expect(h1_tag).to_have_text("Artist: Taylor Swift")
+
+"""
+When: I submit an album on /getalbums
+Then: it is added to the repository
+"""
+
+def test_submit_album(db_connection, page, test_web_address):
+    db_connection.seed("seeds/music_web_app.sql")
+    page.goto(f"http://{test_web_address}/getalbums")
+    page.click('text="Add a New Album:"')
+    page.fill('input[name=title]', "English Rain")
+    page.fill('input[name=release_year]', "2013")
+    page.click('input[type=submit]')
+
+    h2_tag = page.locator("h2")
+    expect(h2_tag).to_have_text([
+        "Title: Doolittle",
+        "Title: Surfer Rosa",
+        "Title: Waterloo",
+        "Title: English Rain",
+    ])
