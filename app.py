@@ -123,6 +123,24 @@ def create_new_album():
     repository.create(album)
     return redirect(f"/getalbums")
 
+# Request:
+# /GET artists and /POST artists
+
+@app.route('/getartists/new')
+def submit_artist():
+    return render_template('/new_artist.html')
+
+@app.route('/getartists', methods=['POST'])
+def create_new_artist():
+    connection = get_flask_database_connection(app)
+    repository = ArtistRepository(connection)
+    name = request.form['name']
+    genre = request.form['genre']
+    artist = Artist(None, name, genre)
+    repository.create(artist)
+    return redirect(f"/getartists")
+
+
 
 
 # These lines start the server if you run this file directly

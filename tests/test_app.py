@@ -131,3 +131,26 @@ def test_submit_album(db_connection, page, test_web_address):
         "Title: Waterloo",
         "Title: English Rain",
     ])
+
+
+"""
+When: I submit an artist on /getartists
+Then: it is added to the repository
+"""
+
+def test_submit_artist(db_connection, page, test_web_address):
+    db_connection.seed("seeds/music_web_app.sql")
+    page.goto(f"http://{test_web_address}/getartists")
+    page.click('text="Add a New Artist:"')
+    page.fill('input[name=name]', "Gabrielle Aplin")
+    page.fill('input[name=genre]', "Indie Pop")
+    page.click('input[type=submit]')
+
+    h2_tag = page.locator("h2")
+    expect(h2_tag).to_have_text([
+        "Name: Pixies",
+        "Name: ABBA",
+        "Name: Taylor Swift",
+        "Name: Nina Simone",
+        "Name: Gabrielle Aplin"
+    ])
