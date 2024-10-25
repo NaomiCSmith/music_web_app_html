@@ -80,3 +80,33 @@ def test_show_album(db_connection, page, test_web_address):
     page.click("text=Title: Waterloo")
     h1_tag = page.locator("h1")
     expect(h1_tag).to_have_text("Album: Waterloo")
+
+
+"""
+GET /artists
+When: I submit a get request to artists in html
+Then: I receive a list of all artists in the repository
+"""
+def test_get_albums(db_connection, page, test_web_address):
+    db_connection.seed("seeds/music_web_app.sql")
+    page.goto(f"http://{test_web_address}/getartists")
+    div_tags = page.locator("div")
+    expect(div_tags).to_have_text([
+        "Name: Pixies",
+        "Name: ABBA",
+        "Name: Taylor Swift",
+        "Name: Nina Simone"
+    ])
+
+
+"""
+When: I visit the artists page
+Then: I can click on a link to see more details about the artist
+"""
+
+def test_show_artist(db_connection, page, test_web_address):
+    db_connection.seed("seeds/music_web_app.sql")
+    page.goto(f"http://{test_web_address}/getartists")
+    page.click("text=Name: Taylor Swift")
+    h1_tag = page.locator("h1")
+    expect(h1_tag).to_have_text("Artist: Taylor Swift")

@@ -87,6 +87,24 @@ def show_album(album_id):
 
 
 
+# Request:
+# /GET artists with html
+
+@app.route('/getartists', methods=['GET'])
+def get_artists():
+    connection = get_flask_database_connection(app)
+    repository = ArtistRepository(connection)
+    artists = repository.all()
+    return render_template('/artists.html', artists=artists)
+
+# add anchors to artists page
+@app.route('/getartists/<int:artist_id>', methods=['GET'])
+def show_artist(artist_id):
+    connection = get_flask_database_connection(app)
+    repository = ArtistRepository(connection)
+    artist = repository.find(artist_id)
+    return render_template('/show_artists.html', artist=artist)
+
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database
 # if started in test mode.
